@@ -1,0 +1,106 @@
+<html>
+ 
+<head>
+  
+               
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+ 
+<!-- Compiled and minified JavaScript -->
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+ 
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+ 
+<script src="https://rawgit.com/gdi2290/angular-websocket/v1.0.9/angular-websocket.js"></script>
+ 
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+ 
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+ 
+ 
+ 
+ 
+</head>
+        <style>
+                body {font-family: Arial;}
+               
+               /* Style the tab */
+               .tab {
+                   overflow: hidden;
+                   border: 1px solid #ccc;
+                   background-color: #f1f1f1;
+               }
+              
+               /* Style the buttons inside the tab */
+               .tab button {
+                   background-color: inherit;
+                   float: left;
+                   border: none;
+                   outline: none;
+                   cursor: pointer;
+                   padding: 14px 16px;
+                   transition: 0.3s;
+                   font-size: 17px;
+               }
+              
+               /* Change background color of buttons on hover */
+               .tab button:hover {
+                   background-color: #ddd;
+               }
+               
+               /* Create an active/current tablink class */
+               .tab button.active {
+                   background-color: #ccc;
+               }
+              
+               /* Style the tab content */
+               .tabcontent {
+                   display: none;
+                   padding: 6px 12px;
+                   border: 1px solid #ccc;
+                   border-top: none;
+               }
+               h1 {
+ 
+                color: white;
+                
+                font-size:
+                2.3rem!important;
+                
+                }
+                
+                div#envelope{
+width: 55%;
+margin: 10px 30% 10px 25%;
+padding:100px 100px;
+border-radius:10px;
+}
+@media only screen and (max-width: 1200px) and (min-width: 601px) {
+    div#envelope{
+    width: 80%;
+    margin: 10px 30% 10px 11%;
+    }
+}
+ 
+        </style>
+</head>
+<body>
+<div  ng-app="myApp.manufacturer"ng-controller="manufacturerCtrl">
+        <div id="envelope">
+    <table style="width:100%">
+    <tr><th><input type="text" name="uuid" placeholder="uuid" ng-model="uuid" required></th></tr>
+    <tr><th><input type="text" name="material" placeholder="material" ng-model="material"></th></tr>
+    <tr><th><input type="text" name="make" placeholder="make" ng-model="make"></th></tr>
+    <tr><th><input type="text" name="factory_name" placeholder="factory name" ng-model="factory_name"></th></tr>
+    <tr><th><input type="text" name="material_location" placeholder="material location" ng-model="material_location"></th></tr>
+    <tr><th><input type="text" name="batch_code" placeholder="batch_code" ng-model="batch_code"></th></tr>
+    <tr><th><input type="text" name="product" placeholder="product" ng-model="product"></th></tr>
+    <tr><th><input type="text" name="shipment" placeholder="shipment" ng-model="shipment"></th></tr>
+    <tr><th><input type="submit" ng-click="Create()"></th></tr>
+ 
+    </table> 
+</div>
+ 
+</body>
+</script>
+</html>
