@@ -1,0 +1,371 @@
+<html>
+ 
+ 
+<head>
+ 
+<title>Shadow Distributor Product Page</title>
+ 
+<!-- Compiled and minified CSS -->
+ 
+<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+ 
+<!-- Compiled and minified JavaScript -->
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+ 
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+ 
+<script src="https://rawgit.com/gdi2290/angular-websocket/v1.0.9/angular-websocket.js"></script>
+ 
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+ 
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+<style>
+ 
+/* Always set the map height explicitly to define the size of the div
+ 
+* element that contains the map. */
+ 
+ 
+.input-field>label {
+ 
+color: white!important;
+ 
+font-weight:
+500!important;
+ 
+font-size:
+1.2rem!important;
+ 
+}
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+#map {
+ 
+height: 85%;
+ 
+}
+ 
+/* Optional: Makes the sample page fill the window. */
+ 
+ 
+html,
+ 
+body {
+ 
+height: 100%;
+ 
+margin: 0;
+ 
+padding:
+0;
+ 
+}
+ 
+ 
+input {
+ 
+color: white;
+ 
+}
+h1 {
+ 
+ color: white;
+  
+ font-size:
+ 2.3rem!important;
+  
+ }
+ 
+label {
+ 
+color: white;
+ 
+font-size:
+1rem!important;
+ 
+}
+ 
+ 
+table {
+    border-style: solid;
+                border-color: white;
+}
+th {
+    border-style: solid;
+                border-color: white;
+                text-align: center;
+               
+}
+td {
+    border-style: solid;
+                border-color: white;
+}
+thead {
+                border-color: white;
+}
+tbody {
+                border-color: white;
+}
+ 
+.loader {
+ 
+border: 6px
+solid #f3f3f3;
+ 
+border-radius:
+50%;
+ 
+border-top:
+6px solid
+#607d8b;
+ 
+width: 30px;
+ 
+height: 30px;
+ 
+-webkit-animation: spin
+2s linear
+infinite;
+ 
+/* Safari */
+ 
+animation: spin
+2s linear
+infinite;
+ 
+margin-top:
+28px;
+ 
+}
+ 
+/* Safari */
+ 
+ 
+@-webkit-keyframes
+spin {
+ 
+0% {
+ 
+-webkit-transform:
+rotate(0deg);
+ 
+}
+ 
+100% {
+ 
+-webkit-transform:
+rotate(360deg);
+ 
+}
+ 
+}
+ 
+ 
+@keyframes
+spin {
+ 
+0% {
+ 
+transform:
+rotate(0deg);
+ 
+}
+ 
+100% {
+ 
+transform:
+rotate(360deg);
+ 
+}
+ 
+}
+ 
+div#envelope{
+width: 55%;
+margin: 10px 30% 10px 25%;
+padding:100px 100px;
+border-radius:10px;
+}
+@media only screen and (max-width: 1200px) and (min-width: 601px) {
+    div#envelope{
+    width: 80%;
+    margin: 10px 30% 10px 11%;
+    }
+}
+</style>
+ 
+ 
+ 
+ 
+</head>
+ 
+ 
+<body>
+ 
+<div class="row"style="padding-left:2%;padding-right:2%;"ng-app="myApp.distributor"ng-controller="distributorCtrl"> 
+        <div id="envelope">
+<div class="col m3"id="space"style="display : block"></div>
+ 
+<divclass="col s12 m6"id="status_form"style="display:block;">
+ 
+ 
+<div class="card blue-grey darken-1">
+ 
+<div class="card-title"style="background-color:white;padding: 0.2%;text-align: center;">
+ 
+<h5>Shadow Distributors</h5>
+ 
+</div>
+ 
+ 
+<div class="card-content white-text"> 
+ 
+ 
+<div class="row"style="margin-bottom:5%!important">
+ 
+<form class="col s12">
+ 
+<!-- <div class="row"> -->
+ 
+<div class="input-field col s6">
+ 
+<input id="barcode"type="text"ng-model="uuid" required>
+ 
+<label class="active"for="barcode">Search barcode here</label>
+ 
+</div>
+ 
+<div class="col s6">
+ 
+<!-- <div class="loader"></div> -->
+ 
+<a class="waves-effect waves-light btn-large"ng-click="search()">
+ 
+<i class="large material-icons">search</i>
+ 
+</a>
+ 
+</div>
+ 
+<!-- </div> -->
+ 
+</form>
+ 
+ 
+</div>
+ 
+</div>
+ 
+</div>
+ 
+ 
+<!--map-->
+ 
+<div id="map"style="display:none"></div>
+ 
+<script>
+ 
+var map;
+ 
+function initMap() {
+ 
+var myLatLng = {lat: 18.52,lng: 73.854 };
+ 
+map = new google.maps.Map(document.getElementById('map'),
+{
+ 
+center: myLatLng,
+ 
+zoom: 12
+ 
+});
+ 
+ 
+var marker =new google.maps.Marker({
+ 
+position:myLatLng,
+ 
+map: map,
+ 
+title: 'Pune'
+ 
+});
+ 
+marker.setMap(map);
+ 
+}
+ 
+</script>
+ 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAghLz0m5O7YFUtLDko_M-KI-qiM7svMyY&callback=initMap"async defer></script>
+ 
+<!--end-->
+ 
+ 
+</div>
+ 
+<div ng-show="show">
+<div class="col s12" >
+ 
+ 
+<div style= "padding: 2%;""text-align: center;">
+<table BORDER=10 BORDERCOLOR=WHITE>
+ 
+<thead style="background-color:#8fb2b9;"><tr>
+ 
+<th >UUID</th>
+ 
+<th>MAKE</th>
+ 
+<th>MATERIAL</th>
+ 
+<th>PRODUCT STATUS</th>
+ 
+<th>SHIPMENT STATUS</th>
+<th>BAR CODESS</th>
+ 
+</tr>
+ 
+</thead>
+ 
+<tbody style="background-color:#b3c8cb;">
+ 
+<tr>
+ 
+<td>{{uuid_search}}</td>
+ 
+<td>{{make}}</td>
+ 
+<td>{{material}}</td>
+ 
+<td>{{productStatus}}</td>
+ 
+<td>{{shipmentStatus}}</td>
+<td>{{barcode}}</td>
+ 
+ 
+ 
+</tr>
+ 
+</tbody>
+ 
+</table>
+</div>
+</div>
+</div>
+ 
+ 
+ 
+</div>
+ 
+ 
+ 
+ 
+</body>
+</html>
