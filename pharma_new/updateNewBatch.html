@@ -1,0 +1,105 @@
+<html>
+ 
+<head>
+  
+               
+<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+ 
+<!-- Compiled and minified JavaScript -->
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+ 
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+ 
+<script src="https://rawgit.com/gdi2290/angular-websocket/v1.0.9/angular-websocket.js"></script>
+ 
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+ 
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+ <style>
+ select{
+     display: inline;
+ }</style>
+</head>
+
+<body>
+<div  ng-app="myApp" ng-controller="myCtrl">
+    <h4><b> REGISTER NEW BATCH </b></h4>
+    <div>
+    <table style="width:100%">
+    <tr><th><input type="text" name="batchCode" placeholder="Enter batch code" ng-model="batchCode" required></th></tr>
+    <tr><th><input type="text" name="quantity" placeholder="Quantity available" ng-model="quantity"></th></tr>
+    <tr><th><input type="text" name="drugId" placeholder="Drug Id" ng-model="drugId"></th></tr>
+    <tr><th><input type="text" name="supplier" placeholder=" Supplier" ng-model="supplier"></th></tr>
+    <tr><th><input type="submit" ng-click="Create()"></th></tr>
+ 
+    </table> 
+    </div>
+    <div ng-show="sucess">
+        Updated new batch of drug,{{drugId}}, with batch code {{batchCode}} with transaction Id {{transactionId}}
+      </div>
+</div>
+ 
+</body>
+<script>
+  
+var app = angular.module('myApp', []);
+ 
+app.controller('myCtrl',['$scope','$http','$timeout',function ($scope,$http,$timeout) {
+  $scope.sucess=false
+  $scope.transactionId="";
+  $scope.Create = function(){
+    //$scope.x = document.getElementById("mySelect").value;
+    //var strSel = "The Value is: " + e.options[e.selectedIndex].value + " and text is: " + e.options[e.selectedIndex].text;
+   // alert($scope.x);
+  $scope.message = "Product have been created sucessfully";
+$scope.setValue();
+}
+$scope.setValue=function() {
+  var request={
+    "$class": "org.acme.pharma_network.updateNewBatch",
+    "batchCode": $scope.batchCode,
+    "batch": {
+    "$class": "org.acme.pharma_network.Batch",
+    "drugId": $scope.drugId,
+    "quantity": $scope.quantity,
+    "supplier": "resource:org.acme.pharma_network.Supplier#"+$scope.supplier
+  }
+}
+     var requestInfo = Request();
+   
+     data : requestInfo
+ 
+  var res = $http.post('http://ec2-54-158-121-223.compute-1.amazonaws.com:3000/api/updateNewBatch',request).then(function successCallback(response){
+           alert("Successfully added new batch");
+           $scope.update_response=response;
+           $scope.sucess=true
+           $scope.transactionId=$scope.update_response.data.transactionId
+       }, function errorCallback(response){
+           console.log("POST-ing of data failed");
+       });
+}
+ 
+function Request() {
+ 
+  return {
+    "Request" : {
+        "$class": "org.acme.pharma_network.updateNewBatch",
+    "batchCode": "",
+    "batch": {
+    "$class": "org.acme.pharma_network.Batch",
+    "drugId": "",
+    "quantity": 0,
+    "supplier": "resource:org.acme.pharma_network.Supplier#8169"
+  }
+   }
+    }
+  };
+ 
+}]);
+ 
+ 
+ 
+</script>
+ 
+</html>

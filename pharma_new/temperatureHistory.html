@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Supply Chain</title>
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+<script src="https://rawgit.com/gdi2290/angular-websocket/v1.0.9/angular-websocket.js"></script>
+
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+</head>
+
+<body >
+
+<div ng-app="myApp" ng-controller="myCtrl">
+<div>
+    <input id="statusid" placeholder="" type="text" width="100px;"ng-model="uuid" required>
+    <input id="searchsubmit" type="submit" value="Search" ng-click="search()">
+</div>
+<div id="chartContainer" style="height: 300px; width: 100%;" ng-show='show'>
+
+</div>
+
+</div>
+
+
+</body>
+
+<script>
+
+
+var app = angular.module('myApp', []);
+
+app.controller('myCtrl',['$scope', '$http','$timeout', function ($scope, $http,$timeout) {
+
+
+$scope.temperature=[];
+$scope.data=[];
+$scope.shipmentStatus=[];
+$scope.colur=[];
+$scope.show=false;
+var dataString=[];
+function Request_search() {
+ 
+ return {
+  
+ "Request" : {
+  
+ "$class":"org.acme.pharma_network.temperatureEvent",
+  
+ "orderId":""
+  
+ }
+  
+ }
+  
+ };
+$scope.search=function(){
+ 
+    init();
+  
+ var uuid =$scope.uuid;
+  
+ var search_payload={"$class":"org.acme.pharma_network.temperatureEvent","orderId":uuid};
+  
+ var requestInfo =Request_search();
+  
+  
+ $http.post("http://ec2-54-158-121-223.compute-1.amazonaws.com:3000/api/temperatureEvent",search_payload).then((function(data,status,
+ headers,config) {
+  
+  
+ $scope.show=true;
+ console.log("success");
+ 
+  
+  
+ }),(function(data,status,
+ headers,config) {
+  
+ alert( "No product with specified UUID");
+  
+ }));
+  
+ }
+ function init(){
+
+var websocket =new WebSocket("ws://ec2-54-158-121-223.compute-1.amazonaws.com:3000");
+websocket.addEventListener('open',evt =>doSocketOpen(evt));
+websocket.addEventListener('message',evt =>doSocketMessage(evt));
+websocket.addEventListener('close',evt =>doSocketClose(evt));
+
+}
+function doSocketOpen(evt) {
+console.log('Open.');
+}
+
+function doSocketMessage(evt) {
+$scope.data.push(JSON.parse(evt.data));
+console.log($scope.data)
+chart();
+}
+function chart(){
+    var len=$scope.data.length;
+    $scope.temperature=[];
+$scope.shipmentStatus=[];
+    for(var i=0;i<len;i++){
+
+$scope.temperature.push($scope.data[i].temperature) 
+
+if($scope.data[i].temperature>50)
+      $scope.colur.push("#ff0000");
+      else
+      $scope.colur.push("rgb(50,205,50)");
+      
+$scope.shipmentStatus.push($scope.data[i].orderStatus)
+dataString.push({ x: i+1, y: $scope.data[i].temperature!=undefined? $scope.data[i].temperature*1 : 0, label: $scope.data[i].orderStatus!=undefined? $scope.data[i].orderStatus : "MANUFACTURER"}
+);
+console.log(dataString);
+
+}
+CanvasJS.addColorSet("greenShades",$scope.colur);
+var chart = new CanvasJS.Chart("chartContainer",
+{
+colorSet: "greenShades",
+title:{
+text: "Temperature Updates" 
+},
+axisY: {
+title: "Temparature"
+},
+legend: {
+verticalAlign: "bottom",
+horizontalAlign: "center"
+},
+data: [
+{ 
+type: "column", 
+dataPoints:dataString 
+}
+]
+});
+chart.render();
+}
+
+function doSocketClose(evt) {
+
+console.log('Close.');
+
+}
+
+}]);
+
+
+
+</script>
+
+</html>

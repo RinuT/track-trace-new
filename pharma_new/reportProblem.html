@@ -1,0 +1,133 @@
+<html>
+ 
+<head>
+  
+               
+<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+ 
+<!-- Compiled and minified JavaScript -->
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+ 
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+ 
+<script src="https://rawgit.com/gdi2290/angular-websocket/v1.0.9/angular-websocket.js"></script>
+ 
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+ 
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+ 
+ 
+ 
+ 
+</head>
+   
+</head>
+<body>
+<div  ng-app="myApp" ng-controller="myCtrl">
+    <h4><b> Report a Problem</b></h4>
+    <div>
+    <table style="width:100%">
+    <tr><th><input type="text" name="BatchCode" placeholder="Enter batch ID" ng-model="BatchCode" required></th></tr>
+    <tr><th><input type="text" name="drugId" placeholder="Enter Drug Id" ng-model="drugId"></th></tr>
+    <tr><th><input type="submit" ng-click="Create()"></th></tr>
+ 
+    </table> 
+    </div>
+    <div ng-show="show">
+        <div class="col s12" >
+          <div><p>The batch was supplid by Supplier </p>
+            {{uuid_search}}
+          </div>
+        <div style= "padding: 2%;""text-align: center;">
+            <p> The chemicals provided with temperature</p>
+            <p id="demo"></p>
+        </div>
+        </div>
+        </div>
+</div>
+ 
+</body>
+<script>
+  
+var app = angular.module('myApp', []);
+ 
+app.controller('myCtrl',['$scope','$http','$timeout',function ($scope,$http,$timeout) {
+    $scope.components=[];
+    $scope.components.name=[];
+    $scope.components.temeperature=[];
+    $scope.text=" "
+    $scope.uuid_search=" "
+    demoP = document.getElementById("demo");
+    
+    function init(){
+
+var websocket =new WebSocket("ws://ec2-54-158-121-223.compute-1.amazonaws.com:3000");
+websocket.addEventListener('open',evt =>doSocketOpen(evt));
+websocket.addEventListener('close',evt =>doSocketClose(evt));
+websocket.addEventListener('message',evt =>doSocketMessage(evt));
+
+}
+function doSocketClose(evt) {
+console.log('Close.');
+
+}
+
+function doSocketMessage(evt) {
+
+let data =JSON.parse(evt.data);
+console.log(data);
+$scope.show=true;
+$scope.uuid_search=data.id
+$scope.components.name.push(data.components[0].name)
+$scope.components.temeperature.push(data.components[0].manufactureTemperature)
+for (i = 0; i < $scope.components.name.length; i++) {
+    $scope.text += $scope.components.name[i] + "    "+$scope.components.temeperature[i]+"<br>";
+}
+document.getElementById("demo").innerHTML = $scope.text;
+}
+function doSocketOpen(evt) {
+console.log('Open.');
+}
+$scope.Create = function(){
+    init();
+$scope.setValue();
+}
+$scope.setValue=function() {
+ 
+  var request={
+    "$class": "org.acme.pharma_network.reportProblem",
+  "BatchCode": $scope.BatchCode,
+  "drugId": $scope.drugId
+}
+     var requestInfo = Request();
+   
+     data : requestInfo
+ 
+  var res = $http.post('http://ec2-54-158-121-223.compute-1.amazonaws.com:3000/api/reportProblem',request).then(function successCallback(response){
+           alert("Successfully created product");
+           $scope.update_response=response;
+          
+       }, function errorCallback(response){
+           console.log("POST-ing of data failed");
+       });
+}
+ 
+function Request() {
+ 
+  return {
+    "Request" : {
+        "$class": "org.acme.pharma_network.reportProblem",
+        "BatchCode": "",
+        "drugId": ""
+   }
+    }
+  };
+ 
+}]);
+ 
+ 
+ 
+</script>
+ 
+</html>
